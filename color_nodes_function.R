@@ -108,7 +108,8 @@ color_nodes.default <- function(
   if (attr_type == "factor") {
         
     # Map levels to colors
-    value <- grDevices::colorRampPalette(palette)(nlevels(value))
+    cpal  <- grDevices::colorRampPalette(palette)(nlevels(value))
+    value <- cpal[as.integer(value)]
 
   }  else if (attr_type == "numeric") { # Handle numerics 
     

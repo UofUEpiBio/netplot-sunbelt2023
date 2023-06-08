@@ -19,64 +19,112 @@
 
 # Load required packages
 library(igraph)
-library(RColorBrewer)
-library(tidyverse)
+library(network)
 library(netplot)
 
-color_nodes <- function(g, attribute, palette = "Set 1") {
-  
-  # Check that attribute exists
-  if (!(attribute %in% names(vertex_attr(g)))) {
+#' Extract a graph attribute
+#' @param graph A graph object of class igraph or network.
+#' @param attribute A character string specifying the name of the attribute.
+#' @return A vector of the attribute values. If the attribute does not exist, an error is thrown.
+#' @export
+get_graph_attribute <- function(graph, attribute) UseMethod("get_graph_attribute")
+
+#' @export
+get_graph_attribute.igraph <- function(graph, attribute) {
+
+  # Check if the attribute exists
+  if (!(attribute %in% igraph::vertex_attr_names(graph))) {
     stop("Attribute does not exist in graph")
   }
-  
-  # Check attribute type
-  value <- igraph::vertex_attr(g, name = attribute)
+
+  # Extract the attribute
+  igraph::vertex_attr(graph, name = attribute)
+
+}
+
+#' @export
+get_graph_attribute.network <- function(graph, attribute) {
+
+  # Check if the attribute exists
+  if (!(attribute %in% network::list.vertex.attributes(graph))) {
+    stop("Attribute does not exist in graph")
+  }
+
+  # Extract the attribute
+  network::get.vertex.attribute(graph, attribute)
+
+}
+
+#' @export
+get_graph_attribute.default <- function(graph, attribute) {
+
+  stop("Graph type not supported")
+
+}
+
+#' @export 
+color_nodes <- function(...) UseMethod("color_nodes")
+
+#' @export
+color_nodes.formula <- function(formula, ...) {
+
+  # Extract the LHS of the formula
+  lhs <- as.character(formula[[2]])
+
+  # Extract the RHS of the formula
+  rhs <- as.character(formula[[3]])
+
+  # Check if the lhs exists in the parent environment
+  if (!(lhs %in% ls(parent.frame()))) {
+    stop("LHS does not exist in the parent environment")
+  }
+
+  # Check if the rhs is a valid name
+  color_nodes(get(lhs, envir = parent.frame()), rhs, ...)
+
+}
+
+#' @export
+color_nodes.default <- function(
+  graph,
+  attribute,
+  palette = grDevices::palette(),
+  ...
+  ) {
+
+  # Extracting the attribute from the graph
+  value <- get_graph_attribute(graph, attribute)
   attr_type <- class(value) 
   
+  # Handle characters, are turned into factors
   if (attr_type == "character") {
+
     value <- as.factor(value)
     attr_type <- "factor"
+
   }
-  
-  # Check that color palette exists
-  if (!(palette %in% grDevices::palette.pals())) {
-    palette <- "Set 1"
-    message("Invalid palette name, using Set1")
-  }
-  palette <- grDevices::palette.colors(palette = palette) 
   
   # Handle factors
   if (attr_type == "factor") {
-    
-    # Extract factor levels
-    levels <- levels(value) 
-    
+        
     # Map levels to colors
-    col_map <- palette[1:length(levels)]  
-    
-    # Color nodes
-    value <- col_map[value]
-  }  
-  
-  # Handle numerics 
-  else if (attr_type == "numeric") {
+    value <- grDevices::colorRampPalette(palette)(nlevels(value))
+
+  }  else if (attr_type == "numeric") { # Handle numerics 
     
     # Find min and max
     attr_min <- min(value)
     attr_max <- max(value)  
     
     # Create color scale
-    value <- colorRamp(palette.colors())(
+    value <- grDevices::colorRamp(palette)(
       (attr_min:attr_max - attr_min)/(attr_max - attr_min)
     )  
     
     # Color nodes based on attribute value
     value <- grDevices::rgb(value, maxColorValue = 255)
-  }
-  
-  # Handle logicals
-  else if (attr_type == "logical") {
+
+  } else if (attr_type == "logical") { # Handle logicals
     
     # Map TRUE/FALSE to colors
     col_map <- c("blue", "red")  
@@ -90,14 +138,12 @@ color_nodes <- function(g, attribute, palette = "Set 1") {
     stop("Attribute type not supported")
   }  
   
+  structure(
+    value,
+    class = "netplot_color_nodes",
+    attr_type = attr_type
+  )
   
-  
-  # Use layout_in_circle() for igraph < 0.7.0
-  if (packageVersion("igraph") < "0.7.0") {
-    nplot(g, vertex.color = value,  layout = layout_in_circle(g))
-  } else {
-    nplot(g, vertex.color = value, layout = layout_nicely(g))
-  }
 }
 
 
@@ -115,8 +161,7 @@ vertex_attr(g1)$group <- c("group1", "group2", "group3")
 # Color nodes by group attribute
 color_nodes(g1, "group")
 
-
-
+color_nodes(g1 ~ group)
 
 
 # Numeric attribute

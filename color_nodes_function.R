@@ -147,51 +147,79 @@ color_nodes.default <- function(
   
 }
 
+if (FALSE) {
 
-# Factor attribute
-g1 <- graph_from_data_frame(d = data.frame(from = c("1", "2", "3"),  
-                                           to = c("2", "3", "1")),  
-                            directed = FALSE)
+  # Factor attribute
+  g1 <- graph_from_data_frame(d = data.frame(from = c("1", "2", "3"),  
+                                            to = c("2", "3", "1")),  
+                              directed = FALSE)
 
-# Assign unique vertex names
-set_vertex_attr(g1, "name", value = c("v1", "v2", "v3"))
+  # Assign unique vertex names
+  set_vertex_attr(g1, "name", value = c("v1", "v2", "v3"))
 
-# Add group attribute to graph as a vertex attribute
-vertex_attr(g1)$group <- c("group1", "group2", "group3")
+  # Add group attribute to graph as a vertex attribute
+  vertex_attr(g1)$group <- c("group1", "group2", "group3")
 
-# Color nodes by group attribute
-color_nodes(g1, "group")
+  # Color nodes by group attribute
+  color_nodes(g1, "group")
 
-color_nodes(g1 ~ group)
+  color_nodes(g1 ~ group)
+
+  # Here is an example using color_nodes with
+  # netplot
+  nplot(g1, vertex.color = color_nodes(g1, "group"))
+  nplot(
+    g1,
+    vertex.color = color_nodes(g1, "group"),
+    edge.color = "black"
+    )
+
+  nplot(
+    g1,
+    vertex.color = color_nodes(g1, "group"),
+    edge.color = "black",
+    # The V() function is to access the vertices in
+    # igraph. Vertex attributes can then be accessed
+    # using the $ operator
+    vertex.label = V(g1)$name
+    )
+
+  nplot(
+    g1,
+    vertex.color = color_nodes(g1, "group"),
+    edge.color = "black",
+    vertex.label = c("A", "B", "C")
+    )
 
 
-# Numeric attribute
-g2 <- graph_from_data_frame(d = data.frame(from = c(1, 2, 3), 
-                                           to = c(2, 3, 1)), 
-                            directed = FALSE)
-V(g2)$value <- c(1, 3, 2)
-color_nodes(g2, "value", "Blues")
+  # Numeric attribute
+  g2 <- graph_from_data_frame(d = data.frame(from = c(1, 2, 3), 
+                                            to = c(2, 3, 1)), 
+                              directed = FALSE)
+  V(g2)$value <- c(1, 3, 2)
+  color_nodes(g2, "value", "Blues")
 
 
 
-# Logical attribute
-g3 <- graph_from_data_frame(d = data.frame(from = c(1, 2, 3), 
-                                           to = c(2, 3, 1)), 
-                            directed = FALSE)
-V(g3)$selected <- c(TRUE, FALSE, TRUE)
-color_nodes(g3, "selected")
+  # Logical attribute
+  g3 <- graph_from_data_frame(d = data.frame(from = c(1, 2, 3), 
+                                            to = c(2, 3, 1)), 
+                              directed = FALSE)
+  V(g3)$selected <- c(TRUE, FALSE, TRUE)
+  color_nodes(g3, "selected")
 
 
 
-# Invalid palette name 
-g4 <- graph_from_data_frame(d = data.frame(from = c(1, 2, 3), 
-                                           to = c(2, 3, 1)), 
-                            directed = FALSE) 
-V(g4)$group <- factor(c("A", "A", "B"))
-color_nodes(g4, "group", "InvalidPalette") 
+  # Invalid palette name 
+  g4 <- graph_from_data_frame(d = data.frame(from = c(1, 2, 3), 
+                                            to = c(2, 3, 1)), 
+                              directed = FALSE) 
+  V(g4)$group <- factor(c("A", "A", "B"))
+  color_nodes(g4, "group", "InvalidPalette") 
 
 
 
-# Attribute that does not exist
-color_nodes(g1, "fake_attr")
+  # Attribute that does not exist
+  color_nodes(g1, "fake_attr")
 
+}

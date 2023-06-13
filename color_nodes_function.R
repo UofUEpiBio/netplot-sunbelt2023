@@ -89,12 +89,16 @@ color_nodes.default <- function(
   graph,
   attribute,
   palette = grDevices::palette(),
+  na_color = "white",
   ...
   ) {
 
   # Extracting the attribute from the graph
   value <- get_graph_attribute(graph, attribute)
   attr_type <- class(value) 
+
+  # Identifying NAs
+  na_idx <- which(is.na(value))
   
   # Handle characters, are turned into factors
   if (attr_type == "character") {
@@ -138,11 +142,15 @@ color_nodes.default <- function(
   else {
     stop("Attribute type not supported")
   }  
+
+  value[na_idx] <- na_color
   
   structure(
     value,
     class = "netplot_color_nodes",
-    attr_type = attr_type
+    attr_type = attr_type,
+    palette = palette,
+    na_color = na_color
   )
   
 }

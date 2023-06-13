@@ -113,6 +113,10 @@ color_nodes.default <- function(
         
     # Map levels to colors
     cpal  <- grDevices::colorRampPalette(palette)(nlevels(value))
+
+    # Creating mapping to recover colors
+    names(cpal) <- levels(value)
+
     value <- cpal[as.integer(value)]
 
   }  else if (attr_type == "numeric") { # Handle numerics 
@@ -124,18 +128,27 @@ color_nodes.default <- function(
     # Create color scale
     value <- grDevices::colorRamp(palette)(
       (attr_min:attr_max - attr_min)/(attr_max - attr_min)
-    )  
+    )
+
+    cpal <- grDevices::rgb(
+      grDevices::colorRamp(palette)(c(0, 1)),
+      maxColorValue = 255
+    )
+
+    names(cpal) <- c(attr_min, attr_max)
     
     # Color nodes based on attribute value
     value <- grDevices::rgb(value, maxColorValue = 255)
 
   } else if (attr_type == "logical") { # Handle logicals
     
-    # Map TRUE/FALSE to colors
-    col_map <- c("blue", "red")  
+
+    # Creating mapping to recover colors
+    cpal <- palette[1:2]
+    names(cpal) <- c("FALSE", "TRUE")
     
     # Color nodes 
-    value <- col_map[as.integer(value) + 1]
+    value <- cpal[as.integer(value) + 1]
   }
   
   # Handle other types (characters, dates)
@@ -150,7 +163,8 @@ color_nodes.default <- function(
     class = "netplot_color_nodes",
     attr_type = attr_type,
     palette = palette,
-    na_color = na_color
+    na_color = na_color,
+    map      = cpal
   )
   
 }
@@ -169,7 +183,10 @@ if (FALSE) {
   vertex_attr(g1)$group <- c("group1", "group2", "group3")
 
   # Color nodes by group attribute
-  color_nodes(g1, "group")
+  vcolors <- color_nodes(g1, "group")
+
+  # nplot(..., vertex.color = vcolors)
+  attr(vcolors, "map")
 
   color_nodes(g1 ~ group)
 

@@ -1,0 +1,13 @@
+---
+---
+
+```{r}
+#| echo: true
+#| label: first-plot
+library(netplot)
+data(UKfaculty, package="igraphdata")
+nplot(UKfaculty)
+```
+
+
+

@@ -1,13 +1,95 @@
 ---
+format:
+  html:
+    toc: true
+    toc-location: left
 ---
+# Introduction
+Thank you for checking out this poster website about `netplot`!
+
+`neplot` is an alternative graph visualization tool that emphasizes aesthetics, providing default parameters that deliver out-of-the-box lovely visualizations.
+
+Some of the principal aspects of the package include the following:
+<br>
+
+* Auto-scaling of vertices using sizes relative to the plotting device.
+* Embedded edge color mixer.
+* True curved edges drawing.
+* User-defined edge curvature.
+* Nicer vertex frame color.
+* Better use of space-filling the plotting device.
+
+The package uses the grid plotting system (just like ggplot2).
+
+# `sna` Example
+
+This is one of the current ways to plot network data. 
 
 ```{r}
 #| echo: true
-#| label: first-plot
+#| include: true
+#| label: sna_example
+#| warning: false
+#| message: false
+
+# load libraries
+library(igraph)
 library(netplot)
-data(UKfaculty, package="igraphdata")
-nplot(UKfaculty)
+library(sna)
+library(intergraph)
+
+set.seed(1)
+
+# read in data
+data("UKfaculty", package = "igraphdata")
+l <- layout_with_fr(UKfaculty)
+
+# create sna graph
+sna::gplot(intergraph::asNetwork(UKfaculty), coord=l)
 ```
 
+# `igraph` Example
+This shows the same dataset from above, but it uses `igraph` to plot it all. `igraph` is one of the common packages used in industry. 
 
+```{r}
+#| echo: true
+#| include: true
+#| label: igraph_example
+#| warning: false
+
+# load libraries
+library(igraph)
+library(netplot)
+
+set.seed(1)
+
+# read in data
+data("UKfaculty", package = "igraphdata")
+l <- layout_with_fr(UKfaculty)
+
+# create igraph graph
+plot(UKfaculty, layout = l)
+```
+
+# `netplot` Example
+Below is an example of how `netplot` plots the same data. As you can see, even the base model of it is quite different, and it allows for a clean, pretty graph overall.  
+```{r}
+#| echo: true
+#| include: true
+#| label: netplot_example
+#| warning: false
+
+# load libraries
+library(igraph)
+library(netplot)
+
+set.seed(1)
+
+# read in data
+data("UKfaculty", package = "igraphdata")
+l <- layout_with_fr(UKfaculty)
+
+# create netplot graph
+nplot(UKfaculty, layout = l)
+```
 

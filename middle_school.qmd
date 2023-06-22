@@ -33,8 +33,8 @@ First, let's clean it all up, getting rid of the "isolates" (those who only are 
 #| message: false
 
 # loading and cleaning data ####
-students <- fread("./misc/data-raw/pone.0153690.s001.csv")
-interactions <- fread("./misc/data-raw/pone.0153690.s003.csv")
+students <- fread("./misc/data-raw/middle_school/pone.0153690.s001.csv")
+interactions <- fread("./misc/data-raw/middle_school/pone.0153690.s003.csv")
 
 students <- students[!is.na(id)]
 students <- students[gender %in% c("0", "1")]
@@ -201,6 +201,7 @@ grid.text("Split According to Gender", x = .2, y = .87, just = "bottom")
 #| label: lunch
 #| warning: false
 #| message: false
+#| cache: true
 
 
 # now let's do the same with lunch period 

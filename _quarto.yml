@@ -9,13 +9,16 @@ website:
   title: "netplot@Sunbelt 2023"
   navbar:
     left:
-      - href: index.qmd
+      - href: index.html
         text: Home
-      - about.qmd
+      - href: middle_school.html
+        text: Middle School Example
+      - href: nursing_home.html
+        text: Nursing Home Example
 
 format:
   html:
-    theme: cosmo
+    theme: journal
     css: styles.css
     toc: true
 

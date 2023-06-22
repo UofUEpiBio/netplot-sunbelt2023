@@ -145,8 +145,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li class="nav-item">
     <a class="nav-link" href="./index.html">Home</a>
   </li>  
-  <li class="dropdown-header">
- about.qmd</li>
+  <li class="nav-item">
+    <a class="nav-link" href="./middle_school.html">Middle School Example</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./nursing_home.html" aria-current="page">Nursing Home Example</a>
+  </li>  
 </ul>
               <div id="quarto-search" class="" title="Search"></div>
           </div> <!-- /navcollapse -->
@@ -161,7 +165,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction-cleaning-data-explore-data" id="toc-introduction-cleaning-data-explore-data" class="nav-link active" data-scroll-target="#introduction-cleaning-data-explore-data">Introduction || Cleaning Data || Explore Data</a></li>
+  <li><a href="#libraries" id="toc-libraries" class="nav-link active" data-scroll-target="#libraries">Libraries</a></li>
+  <li><a href="#loading-data" id="toc-loading-data" class="nav-link" data-scroll-target="#loading-data">Loading Data</a></li>
+  <li><a href="#pre-requisites-for-for-loop" id="toc-pre-requisites-for-for-loop" class="nav-link" data-scroll-target="#pre-requisites-for-for-loop">Pre-Requisites for For-Loop</a></li>
+  <li><a href="#running-the-for-loop" id="toc-running-the-for-loop" class="nav-link" data-scroll-target="#running-the-for-loop">Running the For-Loop</a></li>
+  <li><a href="#graphing-it-all" id="toc-graphing-it-all" class="nav-link" data-scroll-target="#graphing-it-all">Graphing it all!</a></li>
   </ul>
 </nav>
 </nav>
@@ -187,14 +195,65 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<p>This webpage will explore the dataset exploring connections in 7th and 8th grade students at a middle school. The data was taken from <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0153690">“Estimates of Social Contact in a Middle School Based on Self-Report and Wireless Sensor Data”</a>. This is the “Example 1” on the poster.</p>
-<section id="introduction-cleaning-data-explore-data" class="level2">
-<h2 class="anchored" data-anchor-id="introduction-cleaning-data-explore-data">Introduction || Cleaning Data || Explore Data</h2>
+<p>This webpage will explore the dataset exploring connections between health care providers and their patients in VA nursing homes. The data was taken from <a href="https://www.sciencedirect.com/science/article/abs/pii/S1525861023001378?CMX_ID=&amp;SIS_ID=&amp;dgcid=STMJ_AUTH_SERV_PUBLISHED&amp;utm_acid=253857289&amp;utm_campaign=STMJ_AUTH_SERV_PUBLISHED&amp;utm_in=DM355265&amp;utm_medium=email&amp;utm_source=AC_">“Assessing Pathogen Transmission Opportunities: Variation in Nursing Home Staff-Resident Interactions”</a>. This is the “Example 2” on the poster.</p>
+<section id="libraries" class="level2">
+<h2 class="anchored" data-anchor-id="libraries">Libraries</h2>
 <p>These are the packages that were used for this analysis:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"porter"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "porter"</code></pre>
+<div class="cell" data-hash="nursing_home_cache/html/packages_03af1bf3a863fdee9b4d6ac788e0028f">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(network)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(netplot)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="loading-data" class="level1">
+<h1>Loading Data</h1>
+<p>Previously, the data has been cleaned and loaded as an .RData file type. It is loaded below:</p>
+<div class="cell" data-hash="nursing_home_cache/html/load_data_9206fa0121cf0ccf2de23367124ed6a9">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"./misc/data-raw/nursing_home/network99_f1.RData"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pre-requisites-for-for-loop" class="level1">
+<h1>Pre-Requisites for For-Loop</h1>
+<p>Afterwards, in order to run each of the graphs in a “For-Loop”, we need to create a place for the graphs to go and a seed to make it reproducible:</p>
+<div class="cell" data-hash="nursing_home_cache/html/for_loop_prereqs_a913730073dffe85812eaf5aa0cae496">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creates an empty list to store the networks</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>nets <span class="ot">&lt;-</span> <span class="fu">list</span>()  </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Sets a seed for reproducibility </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1231</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="running-the-for-loop" class="level1">
+<h1>Running the For-Loop</h1>
+<p>Now everything is set for the For-Loop to run. This part of the code is where the personalization of the graphs come in. As you can see, there are a number of aspects from <code>netplot</code> that can be manipulated to make the graph look better. Here is the code for that:</p>
+<div class="cell" data-hash="nursing_home_cache/html/for_loop_3e8c55921bd1054d4d1f51a614a21bd8">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">99</span>) { </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Checks if the vertex "is_actor" exists in the network</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  is_health_care_provider <span class="ot">&lt;-</span> networks[[i]] <span class="sc">%v%</span> <span class="st">"is_actor"</span>  </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  nets[[i]] <span class="ot">&lt;-</span> <span class="fu">nplot</span>( networks[[i]], </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                      <span class="co"># Colors the vertices gray if HCP exists, red otherwise</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">vertex.color     =</span> <span class="fu">ifelse</span>(is_health_care_provider, <span class="st">"gray40"</span>, <span class="st">"red3"</span>),  </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                      <span class="co"># Makes vertices square if HCP exists, round otherwise</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">vertex.nsides    =</span> <span class="fu">ifelse</span>(is_health_care_provider <span class="sc">==</span> <span class="cn">TRUE</span>, <span class="dv">4</span>, <span class="dv">10</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                      <span class="co"># Makes HCP vertices larger than patient vertices</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">vertex.size      =</span> <span class="fu">ifelse</span>(is_health_care_provider <span class="sc">==</span> <span class="cn">TRUE</span>, .<span class="dv">25</span>, .<span class="dv">15</span>),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">vertex.size.range =</span> <span class="fu">c</span>(.<span class="dv">015</span>,.<span class="dv">065</span>),</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                      <span class="at">edge.width.range =</span> <span class="fu">c</span>(.<span class="dv">25</span>,.<span class="dv">5</span>),</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                      <span class="co"># Sets edge line breaks to 1 and colors edges black  </span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">edge.line.breaks =</span> <span class="dv">1</span>, <span class="at">edge.color =</span> <span class="sc">~</span> <span class="fu">ego</span>(<span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>) <span class="sc">+</span>    <span class="fu">alter</span>(<span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"lightgray"</span>),</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                      <span class="at">edge.curvature =</span> pi<span class="sc">/</span><span class="dv">6</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                      <span class="co"># Removes vertex labels</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                      <span class="at">vertex.label     =</span> <span class="cn">NULL</span> )</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="graphing-it-all" class="level1">
+<h1>Graphing it all!</h1>
+<p>Lastly, we need to combine each of the graphs into one graph!</p>
+<div class="cell" data-hash="nursing_home_cache/html/print_0e1cfd22a0097857ceb123dbdb39eea5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Combines the 99 plots into an 11x9 grid</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>allgraphs <span class="ot">&lt;-</span> gridExtra<span class="sc">::</span><span class="fu">grid.arrange</span>(<span class="at">grobs =</span> nets, <span class="at">nrow=</span><span class="dv">11</span>, <span class="at">ncol=</span><span class="dv">9</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="nursing_home_files/figure-html/print-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 

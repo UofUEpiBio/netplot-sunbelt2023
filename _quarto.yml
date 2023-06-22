@@ -18,8 +18,7 @@ website:
 
 format:
   html:
-    theme: journal
-    css: styles.css
+    theme: simplex
     toc: true
 
 

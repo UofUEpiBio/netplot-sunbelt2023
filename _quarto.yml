@@ -12,14 +12,19 @@ website:
       - href: index.html
         text: Home
       - href: middle_school.html
-        text: Middle School Example
+        text: Middle School Example  
       - href: nursing_home.html
         text: Nursing Home Example
+    right:
+      - href: https://github.com/USCCANA/netplot
+        icon: github
+      - href: mailto:portergbischoff@gmail.com
+        text: Contact
 
 format:
   html:
     theme: simplex
-    toc: true
+    toc: true 
 
 
 

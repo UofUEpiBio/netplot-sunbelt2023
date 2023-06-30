@@ -96,7 +96,9 @@ source(file = "./misc/color_nodes_function.R")
 
 <br>
 
-## Split According to Grade
+## Splitting Data
+
+### Split According to Grade
 ```{R}
 #| echo: true
 #| include: true
@@ -151,7 +153,7 @@ grid.text("Split According to Grade", x = .2, y = .87, just = "bottom")
 
 <br> 
 
-## Split According to Gender
+### Split According to Gender
 ```{R}
 #| echo: true
 #| include: true
@@ -194,7 +196,7 @@ grid.text("Split According to Gender", x = .2, y = .87, just = "bottom")
 <br>
 
 
-## Split According to Lunch Period
+### Split According to Lunch Period
 ```{R}
 #| echo: true
 #| include: true
@@ -242,3 +244,168 @@ grid.text("Split According to Lunch Period", x = .2, y = .87, just = "bottom")
 
 <br>
 
+## Different `netplot` Options
+
+
+### Changing Lines to Dashes 
+
+This graph correlates to the graph titled "Changing lines to dashes, diamonds to circles, and edge lines to straight lines" on the poster. 
+
+```{R}
+#| echo: true
+#| include: true
+#| label: dashes
+#| warning: false
+#| message: false
+#| cache: true
+
+set.seed(77)
+
+grades <- nplot(
+  net_with_no_isolates,
+  bg.col = "#F5F5F5",
+  vertex.color = color_nodes(net_with_no_isolates, "grade", c("red","blue")),
+  vertex.size.range = c(0.02, 0.02),
+  edge.color = ~ego(alpha = .15, col = "black") + alter(alpha = .15, col = "black"),
+  vertex.label = NULL,
+  edge.width.range = c(2,2),
+  edge.line.lty = 6,
+  edge.line.breaks = 1  
+)  
+
+
+
+# add legend to graph
+grades_dashed <- nplot_legend(
+  grades,
+  labels = c("7th", "8th"),
+  pch = c(21,21),
+  gp = gpar(
+    fill = c("red","blue")),
+  packgrob.args = list(side = "bottom"),
+  ncol = 2  
+)
+
+grades_dashed
+```
+
+
+### Colored Edges and Skipped Vertices
+
+This graph is correlated to the graph titled "Skipping vertices" on the poster. 
+
+```{R}
+#| echo: true
+#| include: true
+#| label: skipped
+#| warning: false
+#| message: false
+#| cache: true
+
+set.seed(77)   
+
+grades <- nplot(
+  net_with_no_isolates,
+  bg.col = "#F5F5F5",
+  vertex.color = color_nodes(net_with_no_isolates, "grade", c("red","blue")),
+  vertex.nsides = ifelse(V(net_with_no_isolates)$grade == 7, 10, 4),
+  vertex.size.range = c(0.0001, 0.0001),
+  edge.color = ~ego(alpha = 0.33) + alter(alpha = 0.33),
+  vertex.label = NULL,
+  edge.width.range = c(2,2),
+  edge.line.breaks = 10
+  )  
+
+# add legend to graph
+grades_edge_colored <- nplot_legend(
+  grades,
+  labels = c("7th", "8th"),
+  pch = c(21,21),
+  gp = gpar(
+    fill = c("red","blue")),
+  packgrob.args = list(side = "bottom"),
+  ncol = 2
+  )
+
+grades_edge_colored
+```
+
+### Changing Background Color
+
+This graph correlates with the graph titled "Background gradient as function of vertex color" on the poster. 
+
+```{R}
+#| echo: true
+#| include: true
+#| label: background
+#| warning: false
+#| message: false
+#| cache: true
+
+set.seed(77)   
+
+grades <- nplot(
+  net_with_no_isolates,
+  bg.col = linearGradient(c("lightpink", "lightskyblue")),
+  vertex.color = color_nodes(net_with_no_isolates, "grade", c("red","blue")),
+  vertex.nsides = ifelse(V(net_with_no_isolates)$grade == 7, 10, 4),
+  vertex.size.range = c(0.01, 0.01),
+  edge.color = ~ego(alpha = 0.15, col = "black") + alter(alpha = 0.15, col = "black"),
+  vertex.label = NULL,
+  edge.line.breaks = 10  
+)  
+
+# add legend to graph
+grades_background <- nplot_legend(
+  grades,
+  labels = c("7th", "8th"),
+  pch = c(21,23),
+  gp = gpar(
+    fill = c("red","blue")),
+  packgrob.args = list(side = "bottom"),
+  ncol = 2  
+)
+
+grades_background
+```
+
+
+### Different Colors 
+
+This graph correlates to the graph titled "Changing vertex colors & edge lines to straight lines" on the poster. 
+
+```{R}
+#| echo: true
+#| include: true
+#| label: colors
+#| warning: false
+#| message: false
+#| cache: true
+
+set.seed(77)
+
+grades <- nplot(
+  net_with_no_isolates,
+  bg.col = "#F5F5F5",
+  vertex.color = color_nodes(net_with_no_isolates, "grade", c("#FFDB58","#708090")),
+  vertex.nsides = ifelse(V(net_with_no_isolates)$grade == 7, 10, 4),
+  vertex.size.range = c(0.02, 0.02),
+  edge.color = ~ego(alpha = .15, col = "black") + alter(alpha = .15, col = "black"),
+  vertex.label = NULL,
+  edge.width.range = c(2,2),
+  edge.line.breaks = 1
+)
+
+# add legend to graph
+grades_different_color <- nplot_legend(
+  grades,
+  labels = c("7th", "8th"),
+  pch = c(21,23),
+  gp = gpar(
+    fill = c("#FFDB58","#708090")),
+  packgrob.args = list(side = "bottom"),
+  ncol = 2  
+)
+
+grades_different_color
+```
